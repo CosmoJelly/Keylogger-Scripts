@@ -1,4 +1,4 @@
-# Python Version Execution
+# 🐍 Python Version Execution
 ## Installing dependencies
 pip install -r requirements.txt
 
