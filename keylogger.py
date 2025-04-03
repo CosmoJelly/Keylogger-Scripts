@@ -1,30 +1,51 @@
-from pynput import keyboard
 import time
+import csv
 import json
+import os
+from pynput import keyboard
 
-if os.path.exists(log_file):
-    with open(log_file, "r") as f:
+# File names
+csv_file = "keystroke_data.csv"
+json_file = "keystroke_data.json"
+
+# Load previous session data from JSON
+if os.path.exists(json_file):
+    with open(json_file, "r") as f:
         try:
             keystrokes = json.load(f)
         except json.JSONDecodeError:
-            # Create new file if corrupted and empty
             keystrokes = []
 else:
     keystrokes = []
 
+# Function to handle key press events
 def on_press(key):
     try:
-        key_str = key.char if hasattr(key, 'char') else str(key)
+        key_char = key.char if hasattr(key, 'char') else str(key)
+    except AttributeError:
+        key_char = str(key)
+    
+    timestamp = time.time()
+    keystroke_entry = {"key": key_char, "timestamp": timestamp}
+    keystrokes.append(keystroke_entry)
+    
+    print(f"Key: {key_char}, Time: {timestamp:.4f}s")
+    
+    # Append to CSV
+    with open(csv_file, "a", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow([key_char, timestamp])
+    
+    # Save to JSON
+    with open(json_file, "w") as f:
+        json.dump(keystrokes, f, indent=4)
 
-        # Appending keystroke with timestamps
-        keystrokes.append({"key": key_str, "timestamp": time.time()})
+# Ensure CSV file has a header if it doesn't exist
+if not os.path.exists(csv_file):
+    with open(csv_file, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Key", "Timestamp (s)"])
 
-        # Saving the file (updated version)
-        with open(log_file, "w") as f:
-            json.dump(keystrokes, f, indent=4)
-
-    except Exception as e:
-        print(f"Error: {e}")
-
-with keyboard.Listener(on_press=on_press) as listener:
+# Set up listener
+with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
     listener.join()
