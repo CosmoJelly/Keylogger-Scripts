@@ -1,4 +1,4 @@
-# 🐍 Python Version Execution
+# 🐍 Python Version Execution [Main Version]
 ## Installing dependencies
 pip install -r requirements.txt
 
@@ -10,7 +10,7 @@ python keylogger.py
 2) Find python.exe in your processes
 3) Click it and End Task
 
-# 🇨++ Version Execution
+# 🇨++ Version Execution [Didn't put much effort into this...]
 ## Compiling the program
 g++ keylogger.cpp -o keylogger.exe -mwindows
 
@@ -22,7 +22,7 @@ g++ keylogger.cpp -o keylogger.exe -mwindows
 2) Find keylogger.exe in your processes
 3) Click it and End Task
 
-# 🇨 Version Execution
+# 🇨 Version Execution [Didn't put much effort into this...]
 ## Compiling the program
 gcc keylogger.cpp -o keylogger.exe -mwindows
 
